@@ -52,8 +52,12 @@ export default function ResumePage() {
               </div>
             </div>
 
-            <div className="hidden md:block">
-  <img src="/img/photo_2026-05-22_20-10-54.jpg" alt="Patrick Walshak" className="object-cover rounded-lg w-[200px] h-32" />
+    <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-lg flex-shrink-0 overflow-hidden">
+  <img
+    src="/img/photo_2026-05-22_20-10-54.jpg"
+    alt="Patrick Walshak"
+    className="w-full h-full object-cover"
+  />
 </div>
           </div>
 
