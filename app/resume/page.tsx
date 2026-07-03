@@ -208,14 +208,7 @@ export default function ResumePage() {
                 </div>
               </section>
 
-              {/* <section>
-                <h2 className="font-mono text-xs font-bold tracking-widest text-[#6D28D9] uppercase border-b border-gray-200 pb-1 mb-3">
-                  Education
-                </h2>
-                <p className="text-sm font-bold">[ Add your school name ]</p>
-                <p className="text-xs text-gray-600">[ Add your qualification ]</p>
-                <p className="text-xs text-gray-400">[ Add years attended ]</p>
-              </section> */}
+          
 
               <section>
                 <h2 className="font-mono text-xs font-bold tracking-widest text-[#6D28D9] uppercase border-b border-gray-200 pb-1 mb-3">
