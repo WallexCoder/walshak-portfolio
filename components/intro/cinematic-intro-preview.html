@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cinematic Intro Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#0A1931;height:100vh;overflow:hidden;font-family:'IBM Plex Mono',monospace;}
+  #introRoot{position:fixed;inset:0;background:#0A1931;z-index:100;overflow:hidden;}
+  canvas{position:absolute;inset:0;z-index:10;}
+  #welcomeText{
+    position:absolute;inset:0;z-index:20;
+    display:flex;align-items:center;justify-content:center;
+    text-align:center;padding:0 24px;
+    color:#B3CFE5;font-weight:700;
+    font-size:clamp(20px,4.5vw,40px);
+    letter-spacing:.25em;
+    opacity:0;pointer-events:none;
+  }
+  #welcomeText span{display:inline-block;opacity:0;filter:blur(14px);}
+  #skipBtn{
+    position:absolute;bottom:24px;right:24px;z-index:50;
+    background:transparent;border:1px solid rgba(255,255,255,.2);
+    color:rgba(255,255,255,.6);
+    font-family:'IBM Plex Mono',monospace;font-size:12px;
+    padding:10px 18px;border-radius:999px;cursor:pointer;
+    opacity:0;transition:color .2s,border-color .2s;
+  }
+  #skipBtn:hover{color:#fff;border-color:rgba(255,255,255,.5);}
+  #landing{
+    height:100vh;display:flex;align-items:center;justify-content:center;
+    color:#B3CFE5;flex-direction:column;gap:10px;text-align:center;
+  }
+  #landing h1{font-size:28px;letter-spacing:.05em;}
+  #landing p{color:#4A7FA7;font-size:14px;}
+  #replayBtn{
+    margin-top:18px;background:#B3CFE5;color:#0A1931;border:none;
+    padding:10px 20px;border-radius:6px;font-family:'IBM Plex Mono',monospace;
+    font-size:12px;font-weight:700;cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<div id="introRoot">
+  <canvas id="canvas"></canvas>
+  <p id="welcomeText"></p>
+  <button id="skipBtn">Skip Intro →</button>
+</div>
+
+<div id="landing">
+  <h1>&gt; Your Name_</h1>
+  <p>Landing page revealed. This is where Navbar + Hero live.</p>
+  <button id="replayBtn">▶ Replay Intro</button>
+</div>
+
+<script>
+const text = "WELCOME TO MY PORTFOLIO";
+const welcomeEl = document.getElementById('welcomeText');
+welcomeEl.innerHTML = text.split('').map(c => `<span>${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+const letterSpans = welcomeEl.querySelectorAll('span');
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const introRoot = document.getElementById('introRoot');
+const skipBtn = document.getElementById('skipBtn');
+
+let particles = [];
+let jetProgress = 0;
+let flightStart = null;
+let rafId = null;
+let stopSpawning = false;
+const FLIGHT_MS = 900;
+
+function resize(){
+  canvas.width = window.innerWidth * devicePixelRatio;
+  canvas.height = window.innerHeight * devicePixelRatio;
+  canvas.style.width = window.innerWidth+'px';
+  canvas.style.height = window.innerHeight+'px';
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+}
+window.addEventListener('resize', resize);
+resize();
+
+function drawJet(x,y,angle){
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.rotate(angle);
+  ctx.fillStyle = '#B3CFE5';
+  ctx.beginPath();
+  ctx.moveTo(26,0);ctx.lineTo(4,-5);ctx.lineTo(-6,-14);ctx.lineTo(-10,-12);
+  ctx.lineTo(-2,-2);ctx.lineTo(-16,-2);ctx.lineTo(-20,-6);ctx.lineTo(-22,-6);
+  ctx.lineTo(-18,0);ctx.lineTo(-22,6);ctx.lineTo(-20,6);ctx.lineTo(-16,2);
+  ctx.lineTo(-2,2);ctx.lineTo(-10,12);ctx.lineTo(-6,14);ctx.lineTo(4,5);
+  ctx.closePath();ctx.fill();ctx.restore();
+}
+
+function spawnParticle(x,y){
+  const spread = 6;
+  particles.push({
+    x: x+(Math.random()-0.5)*spread,
+    y: y+(Math.random()-0.5)*spread,
+    vx: -0.15-Math.random()*0.15,
+    vy: (Math.random()-0.5)*0.35,
+    radius: 4+Math.random()*5,
+    life: 1,
+    decay: 0.006+Math.random()*0.006
+  });
+}
+
+function startX(){return -0.1*window.innerWidth;}
+function startY(){return 0.28*window.innerHeight;}
+function endX(){return 1.1*window.innerWidth;}
+function endY(){return 0.08*window.innerHeight;}
+
+function step(ts){
+  if(flightStart===null) flightStart = ts;
+  const elapsed = ts - flightStart;
+  const t = Math.min(elapsed/FLIGHT_MS, 1);
+  const eased = 1-Math.pow(1-t,3);
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  const jx = startX()+(endX()-startX())*eased;
+  const jy = startY()+(endY()-startY())*eased;
+  const angle = Math.atan2(endY()-startY(), endX()-startX());
+
+  if(t<1){
+    drawJet(jx,jy,angle);
+    if(!stopSpawning){
+      for(let i=0;i<2;i++) spawnParticle(jx-Math.cos(angle)*20, jy-Math.sin(angle)*20);
+    }
+  } else if(!window.__flightDone){
+    window.__flightDone = true;
+    onFlightComplete();
+  }
+
+  particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life-=p.decay;p.radius+=0.15;});
+  particles = particles.filter(p=>p.life>0);
+  particles.forEach(p=>{
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(179,207,229,${p.life*0.35})`;
+    ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  rafId = requestAnimationFrame(step);
+}
+
+function onFlightComplete(){
+  welcomeEl.style.transition = 'opacity .2s';
+  welcomeEl.style.opacity = 1;
+  letterSpans.forEach((span,i)=>{
+    span.style.transition = `opacity .5s cubic-bezier(.16,1,.3,1), filter .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1)`;
+    span.style.transitionDelay = (i*20)+'ms';
+    span.style.transform = `translate(${(Math.random()-0.5)*16}px, ${(Math.random()-0.5)*24}px)`;
+    requestAnimationFrame(()=>{
+      span.style.opacity = 1;
+      span.style.filter = 'blur(0px)';
+      span.style.transform = 'translate(0,0)';
+    });
+  });
+  stopSpawning = true;
+
+  setTimeout(()=>{
+    // exit: fade whole intro
+    introRoot.style.transition = 'opacity .4s ease-in-out';
+    introRoot.style.opacity = 0;
+    setTimeout(()=>{ introRoot.style.display='none'; }, 400);
+  }, 500);
+}
+
+function startIntro(){
+  introRoot.style.display = 'block';
+  introRoot.style.opacity = 1;
+  welcomeEl.style.opacity = 0;
+  letterSpans.forEach(s=>{s.style.opacity=0;s.style.filter='blur(14px)';s.style.transition='none';});
+  particles = [];
+  flightStart = null;
+  window.__flightDone = false;
+  stopSpawning = false;
+  cancelAnimationFrame(rafId);
+
+  skipBtn.style.transition = 'none';
+  skipBtn.style.opacity = 0;
+  setTimeout(()=>{
+    skipBtn.style.transition = 'opacity .4s';
+    skipBtn.style.opacity = 1;
+  }, 300);
+
+  setTimeout(()=>{ rafId = requestAnimationFrame(step); }, 300); // 0.3s black delay
+}
+
+skipBtn.addEventListener('click', ()=>{
+  cancelAnimationFrame(rafId);
+  introRoot.style.transition = 'opacity .3s';
+  introRoot.style.opacity = 0;
+  setTimeout(()=>{ introRoot.style.display='none'; }, 300);
+});
+
+document.getElementById('replayBtn').addEventListener('click', startIntro);
+
+startIntro();
+</script>
+</body>
+</html>
