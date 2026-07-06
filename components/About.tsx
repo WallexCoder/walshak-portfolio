@@ -66,14 +66,14 @@ export default function About() {
         className="max-w-3xl space-y-5 text-[15px] md:text-base leading-relaxed text-[#C4B5FD] mb-10"
       >
         <p>
-          I'm a <span className="text-[#6D28D9] font-semibold">Full-Stack Software Engineer</span> from
+          I'm a <span className="text-[#6D28D9] font-semibold">Full-Stack Developer</span> from
           Nigeria with a passion for creating modern, scalable, and user-focused
           web applications. My journey into software development began with
           curiosity and has grown into a commitment to continuously learning,
           building, and improving every day.
         </p>
         <p>
-          Over time, I've developed a strong foundation in modern web
+          Over time, I've developed a strong foundation in modern web 
           technologies, including{" "}
           {skills.map((s, i) => (
             <span key={s}>

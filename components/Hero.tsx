@@ -75,7 +75,7 @@ export default function Hero() {
             transition={{ delay: 0.8, duration: 0.5 }}
             className="text-xl md:text-[17px] mt-10 leading-8 tracking-wide text-[#C4B5FD] max-w-[520px] mb-10 md:mb-8 "
           >
-            <b className="text-[#6D28D9] lg:text-2xl text-3xl font-semibold"   style={{ fontFamily: "'Rubik Wet Paint', cursive" }} >Full-Stack Software Engineer</b> crafting high-performance digital experiences with Next.js, TypeScript, React, Node.js, and modern web technologies. From intuitive interfaces to scalable backend systems, I focus on building products that are fast, reliable, and designed with precision. Currently open to new opportunities.
+            <b className="text-[#6D28D9] lg:text-2xl text-3xl font-semibold"   style={{ fontFamily: "'Rubik Wet Paint', cursive" }} >Full-Stack Developer</b> crafting high-performance digital experiences with Next.js, TypeScript, React, Node.js, and modern web technologies. From intuitive interfaces to scalable backend systems, I focus on building products that are fast, reliable, and designed with precision. Currently open to new opportunities.
           </motion.p>
 
           <motion.div
