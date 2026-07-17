@@ -13,15 +13,36 @@ interface Project {
   image?: string; // leave undefined to show the placeholder box
 }
 
+// const projects: Project[] = [
+//   {
+//     featured: true,
+//     title: "NovaFit",
+//     description:
+//       "NovaFit is an e-commerce website for fashion and streetwear, where users can browse products, add items to their cart, and checkout .",
+//     tags: ["Next.js", "TypeScript", "Tailwind CSS"],
+//     githubUrl: "https://github.com/WallexCoder/novafit",
+//     liveUrl: "https://novafit-indol.vercel.app/",
+//   },
+// ];
+
 const projects: Project[] = [
   {
     featured: true,
     title: "NovaFit",
-    description:
-      "NovaFit is an e-commerce website for fashion and streetwear, where users can browse products, add items to their cart, and checkout .",
+    description: "NovaFit is an e-commerce website for fashion and streetwear, where users can browse products, add items to their cart, and checkout .",
     tags: ["Next.js", "TypeScript", "Tailwind CSS"],
     githubUrl: "https://github.com/WallexCoder/novafit",
     liveUrl: "https://novafit-indol.vercel.app/",
+  },
+  {
+    featured: false,
+    title: "AgroMart",
+    description:
+      "AgroMart is a web-based marketplace that connects fertilizer sellers with farmers and distributors across Nigeria.",
+    tags: ["Next.js", "TypeScript", "Python", "Tailwind CSS"],
+    githubUrl: "https://github.com/WallexCoder/agromart",
+    liveUrl: "https://agromart-brown.vercel.app/",
+    image: "/img/Screenshot from 2026-07-17 20-03-56.png", // update the extension if your file is .png
   },
 ];
 
