@@ -69,7 +69,7 @@ export default function Contact() {
          <a href="mailto:patrickwalshak1.com"
           className="flex items-center gap-2 font-mono text-sm text-[#C4B5FD] border border-[#6D28D9]/40 rounded-full px-4 py-2 hover:border-[#C4B5FD]/70 transition-colors"
         >
-          <Mail size={16} /> patrickwalshak1@example.com
+          <Mail size={16} /> patrickwalshak1@gmail.com
         </a>
         
           <a href="https://wa.me/2348136070069"
